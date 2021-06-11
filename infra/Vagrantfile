@@ -24,17 +24,28 @@ Vagrant.configure("2") do |config|
     aptcache.vm.synced_folder ".", "/vagrant", mount_options: ["uid=112", "gid=115"]
   end
 
-  config.vm.define "tshark" do |tshark|
+  config.vm.define "capjson" do |tshark|
     tshark.vm.box = "hashicorp/bionic64"
     tshark.vm.network "private_network", ip: "192.168.33.10"
-    tshark.vm.hostname = "tshark"
-    tshark.vm.provision "shell", path: "provision-tshark.sh"
+    tshark.vm.hostname = "capjson"
+    tshark.vm.provision "shell", path: "provision-capjson.sh"
     tshark.vm.provider "virtualbox" do |vb|
       vb.memory = "512"
       # enable promiscuous mode on the private network
       vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-vms"]
     end
   end
+#  config.vm.define "tshark" do |tshark|
+#    tshark.vm.box = "hashicorp/bionic64"
+#    tshark.vm.network "private_network", ip: "192.168.33.10"
+#    tshark.vm.hostname = "tshark"
+#    tshark.vm.provision "shell", path: "provision-tshark.sh"
+#    tshark.vm.provider "virtualbox" do |vb|
+#      vb.memory = "512"
+#      # enable promiscuous mode on the private network
+#      vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-vms"]
+#    end
+#  end
 
   config.vm.define "db" do |db|
     db.vm.box = "hashicorp/bionic64"

@@ -1,0 +1,24 @@
+[Unit]
+Description=Docker container for CapJSON application
+BindsTo=docker.service
+After=docker.service
+
+[Service]
+Environment=NAME=cap-json
+Restart=on-failure
+RestartSec=10
+ExecStartPre=-/bin/mkdir -p /vagrant/data
+ExecStartPre=-/usr/bin/docker kill ${NAME}
+ExecStartPre=-/usr/bin/docker rm ${NAME}
+ExecStart=/usr/bin/docker run --name cap-json \
+                          -v /vagrant/data/logs:/logs \
+                          -e INTERFACE=eth1 \
+                          -e LINES_BY_FILE=500 \
+                          --privileged \
+                          --net=host \
+                          capjson
+
+ExecStop=/usr/bin/docker stop cap-json
+
+[Install]
+WantedBy=multi-user.target
